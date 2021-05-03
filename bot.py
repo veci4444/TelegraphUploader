@@ -1,3 +1,4 @@
+
 # Part of < https://github.com/xditya/TelegraphUploader >
 # (c) 2021 @xditya.
 
@@ -51,45 +52,44 @@ async def check_user(id):
 @BotzHub.on(events.NewMessage(incoming=True, pattern="/start", func=lambda e: e.is_private))
 async def start(event):
     ok = await BotzHub(GetFullUserRequest(event.sender_id))
-    await event.reply(f"Hi, 😉️ {ok.user.first_name}!\nI am a telegraph uploader bot. Just Forward or Send me Supported Media!\n\nFound Bugs? or Any Suggestions? 🤔️. Go here **@Nexa_bots**",
+    if (await check_user(event.sender_id)) == False:
+        return await event.reply(f"Sorry {ok.user.first_name} 😔️, **You must Join My Updates Channel To Use Me!** 😌️", buttons=[Button.url("🔰️ Join My Updates Channel 🔰️", url="https://t.me/NexaBotsUpdates")])
+    await event.reply(f"Hi, {ok.user.first_name} 😉️!\nI am Telegraph Nexa Bot. Just Forward or Send me `Supported Media!` .\n\nFound Bugs? or Any Suggestions? 🤔️. Go here **@Nexa_bots**",
                      buttons=[
                          Button.inline("About 🤷‍♂️️", data="about"),
                          Button.inline("Help ❓", data="help"),
                          Button.inline("Credits ❤️", data="credits")
-                     ],
-                      [
-                          Button.url("🔰Updates Channel🔰", url="https://t.me/NexaBotsUpdates")
-                      ],
-                      [
-                          Button.url("⚜️Support Group⚜️", url="https://t.me/Nexa_bots")
-                     )
+                     ])
 
 @BotzHub.on(events.callbackquery.CallbackQuery(data="help"))
 async def _(event):
     ok = await BotzHub(GetFullUserRequest(event.sender_id))
-    if (await check_user(event.sender_id)) == False:
-        return await event.edit(f"{ok.user.first_name}, You must join my updates channel to use me!", buttons=[Button.url("Join Channel", url="https://t.me/NexaBotsUpdates")])
-    await event.edit(f"Send or Forward me Supported Media and I will upload it to Telegraph! 🙂️\n Supports Media 🤔️\n\n- Images - Small Videos - Gifs - Some Types Of Stickers\n\nHosted with ❤️ by **@NexaBotsUpdates** .")
-
+    await event.edit(f"Send or Forward me Supported Media and I will upload it to Telegraph! 🙂️\n\n **Supported Media Formates 🤔️,** \n\n❄️ `Images`\n❄️ `Small Videos`\n❄️ `Gifs`\n❄️ `Some Types Of Stickers`\n\nHosted with ❤️ by **@NexaBotsUpdates** .", buttons=[Button.inline("About 🤷‍♂️️", data="about"), Button.inline("Credits ❤️", data="credits"), Button.inline("Home 🏘️", data="home")])
                           
                           
 @BotzHub.on(events.callbackquery.CallbackQuery(data="about"))
 async def _(event):
     ok = await BotzHub(GetFullUserRequest(event.sender_id))
-    if (await check_user(event.sender_id)) == False:
-        return await event.edit(f"{ok.user.first_name}, You must join my updates channel to use me!", buttons=[Button.url("Join Channel", url="https://t.me/NexaBotsUpdates")])
-    await event.edit(f"Hi, 😉️ {ok.user.first_name}!\nIm a Simple Telegraph Uploader Bot! 🙂️\n\nMaster : **[I'm Not A Bot](https://t.me/Bruh_0x) .\n\nAlso Join **@NexaBotsUpdates** .")
+    await event.edit(f"Hi, {ok.user.first_name} 😉️!\nI am Telegraph Nexa Bot! 🙂️\n\n**Master : [I'm Not A Bot](https://t.me/Bruh_0x)** \n**Updates Channel : [Nexa Bots](https://t.me/NexaBotsUpdates)** \n**Support Group : [Nexa Bots Support](https://t.me/Nexa_bots)**\n\nWith ❤️ by **@NexaBotsUpdates** .", buttons=[Button.inline("Help ❓", data="help"), Button.inline("Credits ❤️", data="credits"), Button.inline("Home 🏘️", data="home")])
 
 
   
 @BotzHub.on(events.callbackquery.CallbackQuery(data="credits"))
 async def _(event):
     ok = await BotzHub(GetFullUserRequest(event.sender_id))
-    if (await check_user(event.sender_id)) == False:
-        return await event.edit(f"{ok.user.first_name}, You must join my updates channel to use me!", buttons=[Button.url("Join Channel", url="https://t.me/NexaBotsUpdates")])
-    await event.edit(f"Hi, 😉️ {ok.user.first_name}!\nIm a Simple Telegraph Uploader Bot! 🙂️\n\nCredits To **XDITYA**\n\nJoin **@NexaBotsUpdates**")                        
+    await event.edit(f"Hi, 😉️ {ok.user.first_name}!\nI am Telegraph Nexa Bot! 🙂️\n\nCredits To **XDITYA**\n\nJoin **@NexaBotsUpdates**", buttons=[Button.inline("Help ❓", data="help"), Button.inline("About 🤷‍♂️️", data="about"), Button.inline("Home 🏘️", data="home")])                 
 
-                          
+@BotzHub.on(events.callbackquery.CallbackQuery(data="home"))
+async def _(event):
+    ok = await BotzHub(GetFullUserRequest(event.sender_id))
+    await event.edit(f"Hi, 😉️ {ok.user.first_name}!\nI am Telegraph Nexa Bot! 🙂️. Just Forward or Send me Supported Media!\n\nFound Bugs? or Any Suggestions? 🤔️. Go here **@Nexa_bots**\n\nWith ❤️ by **@NexaBotsUpdates**",
+                     buttons=[
+                         Button.inline("About 🤷‍♂️️", data="about"),
+                         Button.inline("Help ❓", data="help"),
+                         Button.inline("Credits ❤️", data="credits")
+                     ])
+
+
 @BotzHub.on(events.NewMessage(incoming=True, func=lambda e: e.is_private and e.media))
 async def uploader(event):
     if (await check_user(event.sender_id)) is False:
@@ -111,7 +111,7 @@ async def uploader(event):
         return
     else:
         os.remove(downloaded_file_name)
-        await ok.edit("Successfully Uploaded to [Telegraph](https://telegra.ph{})\n\n~ Join @NexaBotsUpdates ❤️".format(media_urls[0]),
+        await ok.edit("Your file is successfully uploaded to [Telegraph](https://telegra.ph{})\n\nJoin My Updates Channel **@NexaBotsUpdates** ❤️".format(media_urls[0]),
                     link_preview=True,
                     buttons=[
                         Button.url("🔗 Link To File 🔗", url=f"https://telegra.ph{media_urls[0]}")
